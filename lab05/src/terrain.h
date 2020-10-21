@@ -17,7 +17,8 @@ public:
     void draw();
 
 private:
-    float randValue(int row, int col);
+    float randValue(int row, int col, float amplitude,float frequencyX,float frequencyY,float G);
+    float randValue2(int row, int col, float amplitude, float frequencyX,float frequencyY,float G);
     glm::vec3 getPosition(int row, int col);
     glm::vec3 getNormal(int row, int col);
     std::unique_ptr<OpenGLShape> m_shape;

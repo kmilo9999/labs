@@ -49,42 +49,93 @@ void GLWidget::initializeGL() {
 
 void GLWidget::paintGL() {
     // Clear the color and depth buffers.
-    glClear(GL_COLOR | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT  | GL_DEPTH_BUFFER_BIT);
 
     glm::mat4 model(1.f);
-
-    glUseProgram(m_program);
-
+    ErrorChecker::printGLErrors("Kmilo1");
+ glUseProgram(m_program);
+     ErrorChecker::printGLErrors("Kmilo2");
     // Sets projection and view matrix uniforms.
     glUniformMatrix4fv(glGetUniformLocation(m_program, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
+    ErrorChecker::printGLErrors("Kmilo3");
     glUniformMatrix4fv(glGetUniformLocation(m_program, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
-
+ErrorChecker::printGLErrors("Kmilo4");
     // Sets uniforms that are controlled by the UI.
     glUniform1f(glGetUniformLocation(m_program, "shininess"), settings.shininess);
+    ErrorChecker::printGLErrors("Kmilo5");
     glUniform1f(glGetUniformLocation(m_program, "lightIntensity"), settings.lightIntensity);
+    ErrorChecker::printGLErrors("Kmilo6");
     glUniform3f(glGetUniformLocation(m_program, "lightColor"),
                 settings.lightColor.redF(),
                 settings.lightColor.greenF(),
                 settings.lightColor.blueF());
     glUniform1f(glGetUniformLocation(m_program, "attQuadratic"), settings.attQuadratic);
+    ErrorChecker::printGLErrors("Kmilo7");
     glUniform1f(glGetUniformLocation(m_program, "attLinear"), settings.attLinear);
+    ErrorChecker::printGLErrors("Kmilo8");
     glUniform1f(glGetUniformLocation(m_program, "attConstant"), settings.attConstant);
+    ErrorChecker::printGLErrors("Kmilo9");
     glUniform1f(glGetUniformLocation(m_program, "ambientIntensity"), settings.ambientIntensity);
+    ErrorChecker::printGLErrors("Kmilo10");
     glUniform1f(glGetUniformLocation(m_program, "diffuseIntensity"), settings.diffuseIntensity);
+    ErrorChecker::printGLErrors("Kmilo11");
     glUniform1f(glGetUniformLocation(m_program, "specularIntensity"), settings.specularIntensity);
+ErrorChecker::printGLErrors("Kmilo12");
 
-    glUseProgram(0);
+     glm::vec3 viewPos(m_view[0][3],m_view[1][3],m_view[2][3]);
+     glUniform3fv(glGetUniformLocation(m_program, "CameraSpace_position"),1, glm::value_ptr(viewPos));
+     ErrorChecker::printGLErrors("Kmilo22 ");
+    //glUseProgram(0);
 
     // Draws a sphere at the origin.
     model = glm::mat4(1.f);
     glUniformMatrix4fv(glGetUniformLocation(m_program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniform3f(glGetUniformLocation(m_program, "color"),
-                settings.sphereMColor.redF(),
-                settings.sphereMColor.greenF(),
-                settings.sphereMColor.blueF());
+    ErrorChecker::printGLErrors("Kmilo13 ");
+    glm::vec3 sphereMColor(
+                    settings.sphereMColor.redF(),
+                    settings.sphereMColor.greenF(),
+                    settings.sphereMColor.blueF());
+
+    glUniform3fv(glGetUniformLocation(m_program, "color"),1,
+                glm::value_ptr(sphereMColor));
+
+    ErrorChecker::printGLErrors("Kmilo14 ");
     rebuildMatrices();
+    ErrorChecker::printGLErrors("Kmilo15");
+
+    m_sphere->draw();
+    ErrorChecker::printGLErrors("Kmilo16");
+
+    model = glm::translate(model,glm::vec3(-1.5,0,0));
+    glUniformMatrix4fv(glGetUniformLocation(m_program, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
+    ErrorChecker::printGLErrors("Kmilo3");
+    glUniformMatrix4fv(glGetUniformLocation(m_program, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
+    glUniformMatrix4fv(glGetUniformLocation(m_program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glm::vec3 sphereLColor(
+                    settings.sphereLColor.redF(),
+                    settings.sphereLColor.greenF(),
+                    settings.sphereLColor.blueF());
+
+    glUniform3fv(glGetUniformLocation(m_program, "color"),1,
+                glm::value_ptr(sphereLColor));
     m_sphere->draw();
 
+    model = glm::mat4(1.f);
+    glUniformMatrix4fv(glGetUniformLocation(m_program, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
+    ErrorChecker::printGLErrors("Kmilo3");
+    glUniformMatrix4fv(glGetUniformLocation(m_program, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
+    model = glm::translate(model,glm::vec3(1.5,0,0));
+    glUniformMatrix4fv(glGetUniformLocation(m_program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glm::vec3 sphereRColor(
+                    settings.sphereRColor.redF(),
+                    settings.sphereRColor.greenF(),
+                    settings.sphereRColor.blueF());
+
+    glUniform3fv(glGetUniformLocation(m_program, "color"),1,
+                glm::value_ptr(sphereRColor));
+    m_sphere->draw();
+
+    // glUseProgram(0);
     // TODO: Draw two more spheres. (Task 2)
 
 }

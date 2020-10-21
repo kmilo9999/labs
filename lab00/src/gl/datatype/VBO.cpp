@@ -1,7 +1,7 @@
 #include "VBO.h"
 
 #include "gl/datatype/VBOAttribMarker.h"
-
+#include <algorithm>
 namespace CS123 { namespace GL {
 
 // This will count up the total size of each vertex, based on the maximum offset + numElements
